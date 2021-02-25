@@ -12,6 +12,13 @@ st.markdown(
     "<h1 style='text-align: center; color: MediumSeaGreen;'>Mobile Phone Specs EDA</h1>",
     unsafe_allow_html=True,
 )
+
+st.markdown(
+    "<h1 style='text-align: center; color: #2596be; font-size: 19px;'><i>by Yashwant Jankay</i></h1>",
+    unsafe_allow_html=True,
+)
+
+
 st.subheader("Here is a snapshot of the dataset:")
 st.write(df.head())
 
