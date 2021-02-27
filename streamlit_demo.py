@@ -67,7 +67,7 @@ st.markdown(
 st.markdown(
     "Our primary focus will be - determing the **_relationships among features_**."
 )
-st.markdown("_Conclusively, we will evaluate whether this dataset is real or not._")
+st.markdown("**Conclusively, we will evaluate whether this dataset is real or not.**")
 
 st.markdown("Let's start with a Box plot of **Price** vs **RAM**")
 
@@ -106,7 +106,7 @@ st.markdown(
 st.markdown(
     "Next we are going to engineer a new feature! Dividing the pixel \
     resolution height (*px_height*) by screen height in cm (*sc_h*) - we get \
-    pixels per cm of height.For simplicity, we will call this ** ppcm ** . "
+    pixels per cm of height. For simplicity, we will call this ** ppcm ** . "
 )
 
 df["ppcm"] = df.px_height / df.sc_h
@@ -165,3 +165,46 @@ st.markdown(
             phones."
 )
 
+
+st.markdown(
+    "The next visualization is unfortunately our last - but it is special - it is interactive!\
+        We will take a look at ** RAM ** vs ** pixels per cm ** feature that we engineered earlier.\
+        Below this scatterplot, there is going to be a bar chart denoting the number of mobile phones\
+        belonging to that price range. This bar chart changes with the area selected on the scatterplot.\
+        *Please note that this is an interactive plot, so please go ahead and make a selection\
+        on the plot and watch the bar chart below change!*"
+)
+
+brush = alt.selection(type='interval')
+
+points = alt.Chart(df).mark_point().encode(
+    x='ram:Q',
+    y='ppcm:Q',
+    color=alt.condition(brush, 'price_range:N', alt.value('lightgray'))
+).properties(
+    width=700,
+    height=400).add_selection(
+    brush
+)
+
+bars = alt.Chart(df).mark_bar().encode(
+    y='price_range:N',
+    color='price_range:N',
+    x='count(price_range):Q'
+).properties(
+    width=700).transform_filter(
+    brush
+)
+
+st.altair_chart(points & bars, use_container_width=True)
+
+st.markdown("Ideally, the trend needs to upwards and positive - as expensive phones have higher pixel densities \
+and more RAM. But there is something very unsettling here. We can observe that there are some phones which are in \
+    the ** very high (3)** price range and still have pretty poor pixel densities \
+    (lower right section of the scatterplot, populated by blue circles). This is not the case in a real world scenario. \
+    Such phones rarely get released and have extremely limited scope to attract customers generate revenue. ")
+
+st.markdown("\n")
+
+st.markdown("** Our final conclusion is that apart from the RAM feature, the other features _do NOT reflect real-world phone feature vs price relationships._\
+    This dataset might be synthetically generated with RAM being the only properly correlated feature. **")
